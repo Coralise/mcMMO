@@ -493,6 +493,22 @@ public class PlayerListener implements Listener {
         {
             Player player = (Player) event.getEntity();
 
+            Item drop = event.getItem();
+            ItemStack dropStack = drop.getItemStack();
+
+            //Remove tracking
+            if(drop.hasMetadata(MetadataConstants.METADATA_KEY_TRACKED_ARROW)) {
+                drop.removeMetadata(MetadataConstants.METADATA_KEY_TRACKED_ARROW, mcMMO.p);
+            }
+
+            if (drop.hasMetadata(MetadataConstants.METADATA_KEY_DISARMED_ITEM)) {
+                if (!player.getName().equals(drop.getMetadata(MetadataConstants.METADATA_KEY_DISARMED_ITEM).get(0).asString())) {
+                    event.setCancelled(true);
+                }
+
+                return;
+            }
+
             /* WORLD GUARD MAIN FLAG CHECK */
             if(WorldGuardUtils.isWorldGuardLoaded())
             {
@@ -507,22 +523,6 @@ public class PlayerListener implements Listener {
             //Profile not loaded
             McMMOPlayer mcMMOPlayer = UserManager.getPlayer(player);
             if(mcMMOPlayer == null) {
-                return;
-            }
-
-            Item drop = event.getItem();
-            ItemStack dropStack = drop.getItemStack();
-
-            //Remove tracking
-            if(drop.hasMetadata(MetadataConstants.METADATA_KEY_TRACKED_ARROW)) {
-                drop.removeMetadata(MetadataConstants.METADATA_KEY_TRACKED_ARROW, mcMMO.p);
-            }
-
-            if (drop.hasMetadata(MetadataConstants.METADATA_KEY_DISARMED_ITEM)) {
-                if (!player.getName().equals(drop.getMetadata(MetadataConstants.METADATA_KEY_DISARMED_ITEM).get(0).asString())) {
-                    event.setCancelled(true);
-                }
-
                 return;
             }
 
